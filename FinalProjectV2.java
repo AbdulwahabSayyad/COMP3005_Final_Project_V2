@@ -654,7 +654,28 @@ public class FinalProjectV2 {
     }
 
     public static void memberRegisterClass(Member member, Scanner scanner){
-        //TODO
+        System.out.println("Select the class you would like to register for: ");
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT classes.* FROM classes WHERE class_id NOT IN (SELECT class_id FROM classregs WHERE member_id = ?)");
+            statement.setInt(1, member.getMemberId());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                System.out.println("Class ID#"+resultSet.getInt("class_id")+" - " + resultSet.getString("class_name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        int classID = scanner.nextInt();
+        try{
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO classregs (member_id, class_id) VALUES (?, ?)");
+            statement.setInt(1, member.getMemberId());
+            statement.setInt(2, classID);
+            statement.execute();
+            System.out.println("Member has been registered in class"+ "\n");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void memberViewProfile(Member member){
