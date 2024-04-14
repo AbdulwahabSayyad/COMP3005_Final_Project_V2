@@ -1036,7 +1036,64 @@ public class FinalProjectV2 {
     }
 
     public static void staffEquipmentPortal(Staff staff, Scanner scanner){
-        //TODO
+        System.out.println("EQUIPMENT PORTAL");
+        try{
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM equipment");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                System.out.println("Equipment ID: " + resultSet.getInt("equipment_id"));
+                System.out.println("Equipment Name: " + resultSet.getString("equipment_name"));
+                System.out.println("Last Maintenance Date: " + resultSet.getDate("maintenance_last"));
+                System.out.println("Next Maintenance Date: " + resultSet.getString("maintenance_next"));
+                System.out.println("Is functional: " + resultSet.getBoolean("isFunctioning"));
+                System.out.println("Assigned Staff" + resultSet.getInt("assigned_staff") + "\n");
+                System.out.println("-----------------------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Would you like to update equipment maintenance? (y/n)");
+        scanner.nextLine();
+        String userInput = scanner.nextLine();
+        if(userInput.equals("y")){
+            System.out.println("Enter the equipment ID you would like to update: ");
+            int equipmentID = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("Enter the new maintenance date (yyyy-mm-dd): ");
+            String maintenanceDate = scanner.nextLine();
+            SimpleDateFormat dateformatter = new SimpleDateFormat("yyyy-mm-dd");
+            java.util.Date utilDate = null;
+            Date nextMaint = null;
+            try {
+                utilDate = dateformatter.parse(maintenanceDate);
+                nextMaint = new Date(utilDate.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Is the equipment functioning? (y/n): ");
+            String isFunctioning = scanner.nextLine();
+            boolean isFunctioningBool = false;
+            if(isFunctioning.equals("y")){
+                isFunctioningBool = true;
+            }
+
+            System.out.println("Enter the staff ID to assigm to the equipment: ");
+            int staffID = scanner.nextInt();
+            scanner.nextLine();
+
+            try {
+                PreparedStatement statement = connection.prepareStatement("update equipment set maintenance_last=?, isFunctioning=?, assigned_staff=? WHERE equipment_id=?");
+                statement.setDate(1, nextMaint);
+                statement.setBoolean(2, isFunctioningBool);
+                statement.setInt(3, staffID);
+                statement.setInt(4, equipmentID);
+                statement.execute();
+                System.out.println("Equipment #" + equipmentID + " has been updated"+ "\n");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void staffClassSchedulingPortal(Staff staff, Scanner scanner){
