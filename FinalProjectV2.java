@@ -1130,7 +1130,74 @@ public class FinalProjectV2 {
     }
 
     public static void staffClassSchedulingPortal(Staff staff, Scanner scanner){
-        //TODO
+        System.out.println("CLASS SCHEDULING PORTAL");
+        try{
+            PreparedStatement statement = connection.prepareStatement("SELECT classes.*, schedules.* FROM classes JOIN schedules ON classes.schedule_id = schedules.schedule_id");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                System.out.println("Class ID: " + resultSet.getInt("class_id"));
+                System.out.println("Class Name: " + resultSet.getString("class_name"));
+                System.out.println("Fee: " + resultSet.getString("price"));
+                System.out.println("Notes: " + resultSet.getString("notes"));
+                System.out.println("Timetable: ");
+                System.out.println("Monday: " + resultSet.getTime("mon_start") + " - " + resultSet.getTime("mon_end"));
+                System.out.println("Tuesday: " + resultSet.getTime("tue_start") + " - " + resultSet.getTime("tue_end"));
+                System.out.println("Wednesday: " + resultSet.getTime("wed_start") + " - " + resultSet.getTime("wed_end"));
+                System.out.println("Thursday: " + resultSet.getTime("thu_start") + " - " + resultSet.getTime("thu_end"));
+                System.out.println("Friday: " + resultSet.getTime("fri_start") + " - " + resultSet.getTime("fri_end") + "\n");
+                System.out.println("-----------------------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Would you like to update class schedules? (y/n)");
+        scanner.nextLine();
+        String userInput = scanner.nextLine();
+        if(userInput.equals("y")){
+            System.out.println("Enter the class ID you would like to update: ");
+            int classID = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("Enter the new start time for Monday (hh:mm:ss): ");
+            String monStart = scanner.nextLine();
+            System.out.println("Enter the new end time for Monday (hh:mm:ss): ");
+            String monEnd = scanner.nextLine();
+            System.out.println("Enter the new start time for Tuesday (hh:mm:ss): ");
+            String tueStart = scanner.nextLine();
+            System.out.println("Enter the new end time for Tuesday (hh:mm:ss): ");
+            String tueEnd = scanner.nextLine();
+            System.out.println("Enter the new start time for Wednesday (hh:mm:ss): ");
+            String wedStart = scanner.nextLine();
+            System.out.println("Enter the new end time for Wednesday (hh:mm:ss): ");
+            String wedEnd = scanner.nextLine();
+            System.out.println("Enter the new start time for Thursday (hh:mm:ss): ");
+            String thuStart = scanner.nextLine();
+            System.out.println("Enter the new end time for Thursday (hh:mm:ss): ");
+            String thuEnd = scanner.nextLine();
+            System.out.println("Enter the new start time for Friday (hh:mm:ss): ");
+            String friStart = scanner.nextLine();
+            System.out.println("Enter the new end time for Friday (hh:mm:ss): ");
+            String friEnd = scanner.nextLine();
+
+            try {
+                PreparedStatement statement = connection.prepareStatement("update schedules set mon_start=?, mon_end=?, tue_start=?, tue_end=?, wed_start=?, wed_end=?, thu_start=?, thu_end=?, fri_start=?, fri_end=? WHERE schedule_id=(SELECT schedule_id FROM classes WHERE class_id=?)");
+                statement.setTime(1, Time.valueOf(monStart));
+                statement.setTime(2, Time.valueOf(monEnd));
+                statement.setTime(3, Time.valueOf(tueStart));
+                statement.setTime(4, Time.valueOf(tueEnd));
+                statement.setTime(5, Time.valueOf(wedStart));
+                statement.setTime(6, Time.valueOf(wedEnd));
+                statement.setTime(7, Time.valueOf(thuStart));
+                statement.setTime(8, Time.valueOf(thuEnd));
+                statement.setTime(9, Time.valueOf(friStart));
+                statement.setTime(10, Time.valueOf(friEnd));
+                statement.setInt(11, classID);
+                statement.execute();
+                System.out.println("Class #" + classID + " has been updated"+ "\n");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void staffViewBilling(){
