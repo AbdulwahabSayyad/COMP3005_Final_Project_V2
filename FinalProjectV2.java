@@ -1032,7 +1032,40 @@ public class FinalProjectV2 {
     }
 
     public static void staffRoomBookingPortal(Staff staff, Scanner scanner){
-        //TODO
+        System.out.println("ROOM BOOKING PORTAL");
+        try{
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM rooms");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                System.out.println("Room ID: " + resultSet.getInt("room_id"));
+                System.out.println("Room Capacity: " + resultSet.getString("capacity"));
+                System.out.println("Room Type: " + resultSet.getInt("room_type"));
+                System.out.println("Notes: " + resultSet.getDouble("notes"));
+                System.out.println("-----------------------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("\nBOOKINGS");
+        try{
+            PreparedStatement statement = connection.prepareStatement("SELECT bookings.*, schedules.* FROM bookings JOIN schedules on bookings.schedule_id = schedules.schedule_id");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                System.out.println("Booking ID: " + resultSet.getInt("booking_id"));
+                System.out.println("Room ID: " + resultSet.getInt("room_id"));
+                System.out.println("Class ID: " + resultSet.getInt("class_id"));
+                System.out.println("Booked for: ");
+                System.out.println("Monday: " + resultSet.getTime("mon_start") + " - " + resultSet.getTime("mon_end"));
+                System.out.println("Tuesday: " + resultSet.getTime("tue_start") + " - " + resultSet.getTime("tue_end"));
+                System.out.println("Wednesday: " + resultSet.getTime("wed_start") + " - " + resultSet.getTime("wed_end"));
+                System.out.println("Thursday: " + resultSet.getTime("thu_start") + " - " + resultSet.getTime("thu_end"));
+                System.out.println("Friday: " + resultSet.getTime("fri_start") + " - " + resultSet.getTime("fri_end") + "\n");
+                System.out.println("-----------------------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void staffEquipmentPortal(Staff staff, Scanner scanner){
