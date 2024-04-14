@@ -160,6 +160,9 @@ public class Member {
     }
 
     public String generateAchievements() {
+        if(dateGoal == null) {
+            return "Please set up your fitness goals first!";
+        }
         double weightDifference = Math.abs(weightGoal - weightCurrent);
         double bodyFatDifference = Math.abs(bodyFatGoal - bodyFatCurrent);
         int caloriesDifference = Math.abs(caloriesGoal - caloriesBase);

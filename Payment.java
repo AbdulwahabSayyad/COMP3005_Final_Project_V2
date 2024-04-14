@@ -1,5 +1,5 @@
 import java.sql.Timestamp;
-import java.util.Date;
+import java.sql.Date;
 
 public class Payment {
     private int paymentId;
