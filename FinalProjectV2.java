@@ -543,7 +543,66 @@ public class FinalProjectV2 {
     }
 
     public static void memberRegisterSession(Member member, Scanner scanner){
-        //TODO
+        int trainerID = -1;
+        System.out.println("Select the trainer you would like to train with: ");
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM trainers");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                System.out.println("Trainer ID#"+resultSet.getInt("trainer_id")+" - " + resultSet.getString("f_name") + " " + resultSet.getString("l_name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        trainerID = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("Enter the session date (yyyy-mm-dd): ");
+        String sessionDate = scanner.nextLine();
+        System.out.println("Enter the session start time (hh:mm:ss): ");
+        String sessionStart = scanner.nextLine();
+        System.out.println("Enter the session end time (hh:mm:ss): ");
+        String sessionEnd = scanner.nextLine();
+
+        System.out.println(sessionDate);
+        System.out.println(sessionStart);
+        System.out.println(sessionEnd);
+
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        java.util.Date utilStartTime = null;
+        java.util.Date utilEndTime = null;
+        try {
+            utilStartTime = timeFormat.parse(sessionStart);
+            utilEndTime = timeFormat.parse(sessionEnd);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Time sqlStartTime = new Time(utilStartTime.getTime());
+        Time sqlEndTime = new Time(utilEndTime.getTime());
+
+        SimpleDateFormat dateformatter = new SimpleDateFormat("yyyy-mm-dd");
+        java.util.Date utilDate;
+        Date dateSesh = null;
+        try {
+            utilDate = dateformatter.parse(sessionDate);
+            dateSesh = new Date(utilDate.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
+        try{
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO sessions (member_id, trainer_id, session_date, session_start, session_end, price_per_slot) VALUES (?, ?, ?, ?, ?, 50.00)");
+            statement.setInt(1, member.getMemberId());
+            statement.setInt(2, trainerID);
+            statement.setDate(3, dateSesh);
+            statement.setTime(4, sqlStartTime);
+            statement.setTime(5, sqlEndTime);
+            statement.execute();
+            System.out.println("Session has been registered"+ "\n");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void memberClassPortal(Member member, Scanner scanner){
