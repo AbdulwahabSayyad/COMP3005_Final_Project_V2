@@ -20,4 +20,4 @@ No installation required. Just clone the repository and run FinalProjectV2.java 
 
 ## Video
 
-Link to video: 
+Link to video: https://drive.google.com/file/d/12xTNL-Kq6-8Sq0TfUvV5f2aB_GYv5QJB/view?usp=sharing
