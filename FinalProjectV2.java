@@ -46,7 +46,6 @@ public class FinalProjectV2 {
             System.out.println("1. Member Portal");
             System.out.println("2. Trainer Portal");
             System.out.println("3. Staff Portal");
-            System.out.println("0. run test function");
             System.out.println("4. Exit");
 
             userInput = scanner.nextInt();
@@ -124,9 +123,6 @@ public class FinalProjectV2 {
             else if (userInput == 4){
                 System.out.println("Thank you for using the app.");
                 appFlag = false;
-            }
-            else if (userInput == 0){
-                testTime();
             }
             else {
                 System.out.println("Unkown input. Please try again: \n");
@@ -310,8 +306,7 @@ public class FinalProjectV2 {
             System.out.println("2. Dashboard");
             System.out.println("3. Training Sessions");
             System.out.println("4. Classes");
-            System.out.println("5. Schedule");
-            System.out.println("6. Log out");
+            System.out.println("5. Log out");
 
             userInput = scanner.nextInt();
 
@@ -328,9 +323,6 @@ public class FinalProjectV2 {
                 memberClassPortal(member, scanner);
             }
             else if (userInput == 5){
-                memberSchedulePortal(member, scanner);
-            }
-            else if (userInput == 6){
                 System.out.println("Logged out successfully.");
                 member = null;
                 menFlag = false;
@@ -583,10 +575,6 @@ public class FinalProjectV2 {
         }
     }
 
-    public static void memberSchedulePortal(Member member, Scanner scanner){
-        //TODO
-    }
-
     public static void memberViewClasses(Member member){
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT classes.*, schedules.* FROM classregs JOIN classes ON classregs.class_id = classes.class_id JOIN schedules ON classes.schedule_id = schedules.schedule_id WHERE classregs.member_id = ?");
@@ -596,7 +584,7 @@ public class FinalProjectV2 {
             while (resultSet.next()) {
                 System.out.println(
                     "Class Name: " + resultSet.getString("class_name") + "\n"
-                    
+
                 );
                 System.out.println("--------------------------");
             }
@@ -994,33 +982,5 @@ public class FinalProjectV2 {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-
-
-    public static void testTime(){
-        Schedule schedule = new Schedule();
-        try {
-            PreparedStatement statement = connection.prepareStatement("select * from schedules where schedule_id = ?");
-            statement.setInt(1, 1);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                // Retrieve the member_id from the result set
-                schedule.setMonStart(resultSet.getTime("mon_start").toLocalTime());
-                schedule.setTueStart(resultSet.getTime("tue_start").toLocalTime());
-                schedule.setWedStart(resultSet.getTime("wed_start").toLocalTime());
-                schedule.setThuStart(resultSet.getTime("thu_start").toLocalTime());
-                schedule.setFriStart(resultSet.getTime("fri_start").toLocalTime());
-                schedule.setMonEnd(resultSet.getTime("mon_end").toLocalTime());
-                schedule.setTueEnd(resultSet.getTime("tue_end").toLocalTime());
-                schedule.setWedEnd(resultSet.getTime("wed_end").toLocalTime());
-                schedule.setThuEnd(resultSet.getTime("thu_end").toLocalTime());
-                schedule.setFriEnd(resultSet.getTime("fri_end").toLocalTime());
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(schedule.getMonEnd());
     }
 }
