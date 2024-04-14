@@ -589,13 +589,14 @@ public class FinalProjectV2 {
 
     public static void memberViewClasses(Member member){
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT classes.* FROM classregs JOIN classes ON classregs.class_id = classes.class_id WHERE classregs.member_id = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT classes.*, schedules.* FROM classregs JOIN classes ON classregs.class_id = classes.class_id JOIN schedules ON classes.schedule_id = schedules.schedule_id WHERE classregs.member_id = ?");
             statement.setInt(1, member.getMemberId());
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
                 System.out.println(
                     "Class Name: " + resultSet.getString("class_name") + "\n"
+                    
                 );
                 System.out.println("--------------------------");
             }

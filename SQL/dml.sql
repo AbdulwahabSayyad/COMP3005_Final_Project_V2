@@ -51,11 +51,11 @@ VALUES
 (2, 2),
 (3, 3);
 
-INSERT INTO bookings (room_id, class_id, schedule_id)
+INSERT INTO bookings (room_id, class_id)
 VALUES 
-(1, 1, 1),
-(2, 2, 2),
-(3, NULL, 3);
+(1, 1),
+(2, 2),
+(3, NULL);
 
 INSERT INTO equipment (equipment_name, isFunctioning, maintenance_last, maintenance_next, assigned_staff, notes)
 VALUES 
@@ -68,4 +68,30 @@ VALUES
 (1, 30.00, 'debit', '2024-04-01', 'Payment for Yoga Class'),
 (2, 40.00, 'credit', '2024-04-02', 'Payment for Pilates Class'),
 (3, 50.00, 'cash', '2024-04-03', 'Payment for Fitness Class');
+
+UPDATE schedules
+SET mon_start = '09:00:00', mon_end = '16:00:00', tue_start = '09:00:00', tue_end = '16:00:00', wed_start = '09:00:00', wed_end = '16:00:00', thu_start = '09:00:00', thu_end = '16:00:00', fri_start = '09:00:00', fri_end = '16:00:00';
+
+INSERT INTO schedules (mon_start, mon_end, tue_start, tue_end, wed_start, wed_end, thu_start, thu_end, fri_start, fri_end)
+VALUES
+(NULL, NULL, '15:00:00', '16:00:00', NULL, NULL, NULL, NULL, '18:00:00', '19:00:00'),
+('09:00:00', '10:00:00', NULL, NULL, '09:00:00', '10:00:00', NULL, NULL, NULL, NULL),
+(NULL, NULL, '10:00:00', '11:00:00', NULL, NULL, '10:00:00', '11:00:00', NULL, NULL),
+(NULL, NULL, '15:00:00', '16:00:00', NULL, NULL, NULL, NULL, '18:00:00', '19:00:00'),
+('09:00:00', '10:00:00', NULL, NULL, '09:00:00', '10:00:00', NULL, NULL, NULL, NULL),
+(NULL, NULL, '10:00:00', '11:00:00', NULL, NULL, '10:00:00', '11:00:00', NULL, NULL);
+
+UPDATE classes
+SET schedule_id = 4 WHERE class_id = 1;
+UPDATE classes
+SET schedule_id = 5 WHERE class_id = 2;
+UPDATE classes
+SET schedule_id = 6 WHERE class_id = 3;
+
+UPDATE bookings
+SET schedule_id = 7 WHERE booking_id = 1;
+UPDATE bookings
+SET schedule_id = 8 WHERE booking_id = 2;
+UPDATE bookings
+SET schedule_id = 9 WHERE booking_id = 3;
 
