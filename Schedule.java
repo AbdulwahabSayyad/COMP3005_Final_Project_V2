@@ -1,92 +1,81 @@
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalTime;
 
 public class Schedule {
     private int scheduleId;
-    private Date monStart;
-    private Date monEnd;
-    private Date tueStart;
-    private Date tueEnd;
-    private Date wedStart;
-    private Date wedEnd;
-    private Date thuStart;
-    private Date thuEnd;
-    private Date friStart;
-    private Date friEnd;
-    private Date satStart;
-    private Date satEnd;
-    private Date sunStart;
-    private Date sunEnd;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private LocalTime monStart;
+    private LocalTime monEnd;
+    private LocalTime tueStart;
+    private LocalTime tueEnd;
+    private LocalTime wedStart;
+    private LocalTime wedEnd;
+    private LocalTime thuStart;
+    private LocalTime thuEnd;
+    private LocalTime friStart;
+    private LocalTime friEnd;
+    private LocalTime satStart;
+    private LocalTime satEnd;
+    private LocalTime sunStart;
+    private LocalTime sunEnd;
 
     // Getters
     public int getScheduleId() {
         return scheduleId;
     }
 
-    public Date getMonStart() {
+    public LocalTime getMonStart() {
         return monStart;
     }
 
-    public Date getMonEnd() {
+    public LocalTime getMonEnd() {
         return monEnd;
     }
 
-    public Date getTueStart() {
+    public LocalTime getTueStart() {
         return tueStart;
     }
 
-    public Date getTueEnd() {
+    public LocalTime getTueEnd() {
         return tueEnd;
     }
 
-    public Date getWedStart() {
+    public LocalTime getWedStart() {
         return wedStart;
     }
 
-    public Date getWedEnd() {
+    public LocalTime getWedEnd() {
         return wedEnd;
     }
 
-    public Date getThuStart() {
+    public LocalTime getThuStart() {
         return thuStart;
     }
 
-    public Date getThuEnd() {
+    public LocalTime getThuEnd() {
         return thuEnd;
     }
 
-    public Date getFriStart() {
+    public LocalTime getFriStart() {
         return friStart;
     }
 
-    public Date getFriEnd() {
+    public LocalTime getFriEnd() {
         return friEnd;
     }
 
-    public Date getSatStart() {
+    public LocalTime getSatStart() {
         return satStart;
     }
 
-    public Date getSatEnd() {
+    public LocalTime getSatEnd() {
         return satEnd;
     }
 
-    public Date getSunStart() {
+    public LocalTime getSunStart() {
         return sunStart;
     }
 
-    public Date getSunEnd() {
+    public LocalTime getSunEnd() {
         return sunEnd;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
     }
 
     // Setters
@@ -94,68 +83,60 @@ public class Schedule {
         this.scheduleId = scheduleId;
     }
 
-    public void setMonStart(Date monStart) {
+    public void setMonStart(LocalTime monStart) {
         this.monStart = monStart;
     }
 
-    public void setMonEnd(Date monEnd) {
+    public void setMonEnd(LocalTime monEnd) {
         this.monEnd = monEnd;
     }
 
-    public void setTueStart(Date tueStart) {
+    public void setTueStart(LocalTime tueStart) {
         this.tueStart = tueStart;
     }
 
-    public void setTueEnd(Date tueEnd) {
+    public void setTueEnd(LocalTime tueEnd) {
         this.tueEnd = tueEnd;
     }
 
-    public void setWedStart(Date wedStart) {
+    public void setWedStart(LocalTime wedStart) {
         this.wedStart = wedStart;
     }
 
-    public void setWedEnd(Date wedEnd) {
+    public void setWedEnd(LocalTime wedEnd) {
         this.wedEnd = wedEnd;
     }
 
-    public void setThuStart(Date thuStart) {
+    public void setThuStart(LocalTime thuStart) {
         this.thuStart = thuStart;
     }
 
-    public void setThuEnd(Date thuEnd) {
+    public void setThuEnd(LocalTime thuEnd) {
         this.thuEnd = thuEnd;
     }
 
-    public void setFriStart(Date friStart) {
+    public void setFriStart(LocalTime friStart) {
         this.friStart = friStart;
     }
 
-    public void setFriEnd(Date friEnd) {
+    public void setFriEnd(LocalTime friEnd) {
         this.friEnd = friEnd;
     }
 
-    public void setSatStart(Date satStart) {
+    public void setSatStart(LocalTime satStart) {
         this.satStart = satStart;
     }
 
-    public void setSatEnd(Date satEnd) {
+    public void setSatEnd(LocalTime satEnd) {
         this.satEnd = satEnd;
     }
 
-    public void setSunStart(Date sunStart) {
+    public void setSunStart(LocalTime sunStart) {
         this.sunStart = sunStart;
     }
 
-    public void setSunEnd(Date sunEnd) {
+    public void setSunEnd(LocalTime sunEnd) {
         this.sunEnd = sunEnd;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }
 

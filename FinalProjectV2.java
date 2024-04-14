@@ -5,8 +5,10 @@ import java.util.Scanner;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 
 /**
  * Final Project - V2
@@ -45,6 +47,7 @@ public class FinalProjectV2 {
             System.out.println("1. Member Portal");
             System.out.println("2. Trainer Portal");
             System.out.println("3. Staff Portal");
+            System.out.println("0. run test function");
             System.out.println("4. Exit");
 
             userInput = scanner.nextInt();
@@ -76,14 +79,55 @@ public class FinalProjectV2 {
                 }
             }
             else if (userInput == 2){
-                trainerLogin();
+                Trainer trainer = new Trainer();
+                System.out.println("TRAINER PORTAL AUTHORIZATION:");
+                System.out.println("1. Sign In");
+                System.out.println("2. Back");
+                userInput = scanner.nextInt();
+                if(userInput == 1){
+                    trainer = trainerLogin(trainer, scanner);
+                    trainerID = trainer.getTrainerId();
+                }
+                else if(userInput == 2){
+                    continue;
+                }
+
+                if(trainerID == -1 && (userInput == 1 || userInput ==2)){
+                    System.out.println("Trainer ID does not exist. Returning to main menu.");
+                    continue;
+                }
+                else{
+                    trainerPortal(trainer, scanner);
+                }
             }
             else if (userInput == 3){
-                staffLogin();
+                Staff staff = new Staff();
+                System.out.println("STAFF PORTAL AUTHORIZATION:");
+                System.out.println("1. Sign In");
+                System.out.println("2. Back");
+                userInput = scanner.nextInt();
+                if(userInput == 1){
+                    staff = staffLogin(staff, scanner);
+                    staffID = staff.getStaffId();
+                }
+                else if(userInput == 2){
+                    continue;
+                }
+
+                if(staffID == -1 && (userInput == 1 || userInput ==2)){
+                    System.out.println("Staff ID does not exist. Returning to main menu.");
+                    continue;
+                }
+                else{
+                    staffPortal(staff, scanner);
+                }
             }
             else if (userInput == 4){
                 System.out.println("Thank you for using the app.");
                 appFlag = false;
+            }
+            else if (userInput == 0){
+                testTime();
             }
             else {
                 System.out.println("Unkown input. Please try again: \n");
@@ -129,12 +173,54 @@ public class FinalProjectV2 {
         return member;
     }
 
-    public static void trainerLogin(){
+    public static Trainer trainerLogin(Trainer trainer, Scanner scanner){
+        int trainerID = -1;
+        System.out.println("Enter your Trainer ID: ");
+        trainerID = scanner.nextInt();
 
+        try {
+            PreparedStatement statement = connection.prepareStatement("select * from trainers where trainer_id = ?");
+            statement.setInt(1, trainerID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                // Retrieve the trainer_id from the result set
+                trainer.setTrainerId(trainerID);
+                trainer.setFirstName(resultSet.getString("f_name"));
+                trainer.setScheduleId(resultSet.getInt("schedule_id"));
+            }
+            else{
+                trainer.setTrainerId(-1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return trainer;
     }
 
-    public static void staffLogin(){
+    public static Staff staffLogin(Staff staff, Scanner scanner){
 
+        int staffID = -1;
+        System.out.println("Enter your Staff ID: ");
+        staffID = scanner.nextInt();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement("select * from staff where staff_id = ?");
+            statement.setInt(1, staffID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                // Retrieve the staff_id from the result set
+                staff.setStaffId(staffID);
+                staff.setFirstName(resultSet.getString("f_name"));
+            }
+            else{
+                staff.setStaffId(-1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return staff;
     }
 
     public static Member memberSignUp(Scanner scanner){
@@ -466,7 +552,7 @@ public class FinalProjectV2 {
     }
 
     public static void memberRegisterSession(Member member, Scanner scanner){
-
+        //TODO
     }
 
     public static void memberClassPortal(Member member, Scanner scanner){
@@ -499,7 +585,7 @@ public class FinalProjectV2 {
     }
 
     public static void memberSchedulePortal(Member member, Scanner scanner){
-
+        //TODO
     }
 
     public static void memberViewClasses(Member member){
@@ -521,7 +607,7 @@ public class FinalProjectV2 {
     }
 
     public static void memberRegisterClass(Member member, Scanner scanner){
-        
+        //TODO
     }
 
     public static void memberViewProfile(Member member){
@@ -712,5 +798,229 @@ public class FinalProjectV2 {
             System.out.println("Unkown input.\n");
         }
         return payment;
+    }
+
+    public static void trainerPortal(Trainer trainer, Scanner scanner){
+        if(trainer.getTrainerId() == -1){
+            return;
+        }
+        boolean menFlag = true;
+        int userInput = -1;
+        System.out.println("Welcome, " + trainer.getFirstName() + "!");
+
+        while(menFlag){
+            
+            System.out.println("Select one of the options below:");
+            System.out.println("1. Schedule/Availability");
+            System.out.println("2. View Member Profile");
+            System.out.println("3. Log out");
+
+            userInput = scanner.nextInt();
+
+            if(userInput == 1){
+                trainerSchedulePortal(trainer, scanner);
+            }
+            else if (userInput == 2){
+                trainerMemberView(trainer, scanner);
+            }
+            else if (userInput == 3){
+                System.out.println("Logged out successfully.");
+                trainer = null;
+                menFlag = false;
+            }
+            else {
+                System.out.println("Unkown input. Please try again: \n");
+            }
+            
+        }
+    }
+
+    public static void trainerSchedulePortal(Trainer trainer, Scanner scanner){
+        System.out.println("YOUR AVAILABILITY");
+        try {
+            PreparedStatement statement = connection.prepareStatement("select * from schedules where schedule_id = ?");
+            statement.setInt(1, trainer.getScheduleId());
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                System.out.println("Monday: " + resultSet.getTime("mon_start") + " - " + resultSet.getTime("mon_end"));
+                System.out.println("Tuesday: " + resultSet.getTime("tue_start") + " - " + resultSet.getTime("tue_end"));
+                System.out.println("Wednesday: " + resultSet.getTime("wed_start") + " - " + resultSet.getTime("wed_end"));
+                System.out.println("Thursday: " + resultSet.getTime("thu_start") + " - " + resultSet.getTime("thu_end"));
+                System.out.println("Friday: " + resultSet.getTime("fri_start") + " - " + resultSet.getTime("fri_end") + "\n");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Would you like to update your availability? (y/n)");
+        scanner.nextLine();
+        String userInput = scanner.nextLine();
+        if(userInput.equals("y")){
+            System.out.println("Select the day of the week you would like to update:");
+            System.out.println("1. Monday");
+            System.out.println("2. Tuesday");
+            System.out.println("3. Wednesday");
+            System.out.println("4. Thursday");
+            System.out.println("5. Friday");
+            int day = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("Enter the new start time (hh:mm:ss): ");
+            String startTime = scanner.nextLine();
+            System.out.println("Enter the new end time (hh:mm:ss): ");
+            String endTime = scanner.nextLine();
+            
+            try{
+                PreparedStatement statement = null; 
+                if(day == 1){
+                    statement = connection.prepareStatement("update schedules set mon_start=?, mon_end=? WHERE schedule_id=?");
+                }
+                else if(day == 2){
+                    statement = connection.prepareStatement("update schedules set tue_start=?, tue_end=? WHERE schedule_id=?");                    statement.setTime(3, Time.valueOf(startTime));
+                }
+                else if(day == 3){
+                    statement = connection.prepareStatement("update schedules set wed_start=?, wed_end=? WHERE schedule_id=?");                    statement.setTime(5, Time.valueOf(startTime));
+                }
+                else if(day == 4){
+                    statement = connection.prepareStatement("update schedules set thu_start=?, thu_end=? WHERE schedule_id=?");                    statement.setTime(7, Time.valueOf(startTime));
+                }
+                else if(day == 5){
+                    statement = connection.prepareStatement("update schedules set fri_start=?, fri_end=? WHERE schedule_id=?");                    statement.setTime(9, Time.valueOf(startTime));
+                }
+                statement.setTime(1, Time.valueOf(startTime));
+                statement.setTime(2, Time.valueOf(endTime));
+                statement.setInt(3, trainer.getScheduleId());
+                statement.execute();
+                System.out.println("Availability has been updated"+ "\n");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            
+            }
+        }
+    }
+
+    public static void trainerMemberView(Trainer trainer, Scanner scanner){
+        System.out.println("Enter the member ID you would like to view: ");
+        int memberID = scanner.nextInt();
+        try {
+            PreparedStatement statement = connection.prepareStatement("select * from members where member_id = ?");
+            statement.setInt(1, memberID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                System.out.println("MEMBER PROFILE");
+                System.out.println("Name: " + resultSet.getString("f_name") + " " + resultSet.getString("l_name"));
+                System.out.println("Weight: " + resultSet.getDouble("weight_curr"));
+                System.out.println("Goal Weight: " + resultSet.getDouble("weight_goal"));
+                System.out.println("Bodyfat: " + resultSet.getDouble("bodyfat_curr"));
+                System.out.println("Goal Bodyfat: " + resultSet.getDouble("bodyfat_goal"));
+                System.out.println("Caloric Intake: " + resultSet.getInt("cals_base"));
+                System.out.println("Goal Caloric Intake: " + resultSet.getInt("cals_goal"));
+                System.out.println("Goal Date: " + resultSet.getDate("date_goal") + "\n");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void staffPortal(Staff staff, Scanner scanner){
+        if(staff.getStaffId() == -1){
+            return;
+        }
+        boolean menFlag = true;
+        int userInput = -1;
+        System.out.println("Welcome, " + staff.getFirstName() + "!");
+
+        while(menFlag){
+            
+            System.out.println("Select one of the options below:");
+            System.out.println("1. Room Booking Management");
+            System.out.println("2. Equipment Maintenance");
+            System.out.println("3. Class Schedule Management");
+            System.out.println("4. Billing");
+            System.out.println("5. Log out");
+
+            userInput = scanner.nextInt();
+
+            if(userInput == 1){
+                staffRoomBookingPortal(staff, scanner);
+            }
+            else if (userInput == 2){
+                staffEquipmentPortal(staff, scanner);
+            }
+            else if (userInput == 3){
+                staffClassSchedulingPortal(staff, scanner);
+            }
+            else if (userInput == 4){
+                staffViewBilling();
+            }
+            else if (userInput == 5){
+                System.out.println("Logged out successfully.");
+                staff = null;
+                menFlag = false;
+            }
+            else {
+                System.out.println("Unkown input. Please try again: \n");
+            }           
+        }
+    }
+
+    public static void staffRoomBookingPortal(Staff staff, Scanner scanner){
+        //TODO
+    }
+
+    public static void staffEquipmentPortal(Staff staff, Scanner scanner){
+        //TODO
+    }
+
+    public static void staffClassSchedulingPortal(Staff staff, Scanner scanner){
+        //TODO
+    }
+
+    public static void staffViewBilling(){
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM payments");
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                System.out.println("Payment ID: " + resultSet.getInt("payment_id"));
+                System.out.println("Member ID: " + resultSet.getInt("member_id"));
+                System.out.println("Amount: $" + resultSet.getDouble("total"));
+                System.out.println("Payment Method: " + resultSet.getString("payment_method"));
+                System.out.println("Billing Date: " + resultSet.getDate("payment_date"));
+                System.out.println("Description: " + resultSet.getString("description"));
+                System.out.println("-----------------------------");
+            }
+
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public static void testTime(){
+        Schedule schedule = new Schedule();
+        try {
+            PreparedStatement statement = connection.prepareStatement("select * from schedules where schedule_id = ?");
+            statement.setInt(1, 1);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                // Retrieve the member_id from the result set
+                schedule.setMonStart(resultSet.getTime("mon_start").toLocalTime());
+                schedule.setTueStart(resultSet.getTime("tue_start").toLocalTime());
+                schedule.setWedStart(resultSet.getTime("wed_start").toLocalTime());
+                schedule.setThuStart(resultSet.getTime("thu_start").toLocalTime());
+                schedule.setFriStart(resultSet.getTime("fri_start").toLocalTime());
+                schedule.setMonEnd(resultSet.getTime("mon_end").toLocalTime());
+                schedule.setTueEnd(resultSet.getTime("tue_end").toLocalTime());
+                schedule.setWedEnd(resultSet.getTime("wed_end").toLocalTime());
+                schedule.setThuEnd(resultSet.getTime("thu_end").toLocalTime());
+                schedule.setFriEnd(resultSet.getTime("fri_end").toLocalTime());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(schedule.getMonEnd());
     }
 }
